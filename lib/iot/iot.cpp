@@ -3,7 +3,6 @@
 #include <PubSubClient.h>
 #include "conf.h"
 #include <iot.h>
-#include <ArduinoJson.h>
 
 IOT::IOT(WiFiClientSecure &wifi_client, PubSubClient &pubsub_client)
 {

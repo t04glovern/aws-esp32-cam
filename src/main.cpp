@@ -86,7 +86,6 @@ void setup()
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.println("Failed to connect to WiFi");
-
         sleep(5);
     }
     Serial.print("Connected to WiFi with IP address ");
@@ -99,9 +98,9 @@ void loop()
 {
     if (get_data())
     {
-        if (iotclient.publish("foo/", fb->buf, fb->len))
+        if (iotclient.publish("foo", fb->buf, fb->len))
         {
-            Serial.println(String("Sucessfuly posted ") + String(fb->len) + String(" bytes"));
+            Serial.println(String("Successfully posted ") + String(fb->len) + String(" bytes"));
         }
         else
         {
