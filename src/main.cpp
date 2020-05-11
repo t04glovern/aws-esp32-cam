@@ -20,19 +20,18 @@ PubSubClient mqttClient(secureClient);
 IOT iotclient(secureClient,mqttClient);
 
 // Status and illumination LED's
-bool  get_data(void)
+bool get_data(void)
 {
- fb = esp_camera_fb_get();
-if (!fb)
-{
-  Serial.println("Failed to get image");
-  return false;
-}
-else
-{
-  return true;
-}
-
+  fb = esp_camera_fb_get();
+  if (!fb)
+  {
+    Serial.println("Failed to get image");
+    return false;
+  }
+    else
+  {
+    return true;
+  }
 }
 
 void setup() {
@@ -60,15 +59,10 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_QQVGA; // Todo test the limits of what I can set here
-  config.jpeg_quality = 10;
+  config.frame_size = FRAMESIZE_QVGA;
+  config.jpeg_quality = 5;
   config.fb_count = 1;
   config.ledc_timer = LEDC_TIMER_0;
-
-#if defined(CAMERA_MODEL_ESP_EYE)
-  pinMode(13, INPUT_PULLUP);
-  pinMode(14, INPUT_PULLUP);
-#endif
 
   // camera init
   esp_err_t err = esp_camera_init(&config);
@@ -78,15 +72,16 @@ void setup() {
   }
   sensor_t * s = esp_camera_sensor_get();
   //initial sensors are flipped vertically and colors are a bit saturated
-  if (s->id.PID == OV3660_PID) {
+  if (s->id.PID == OV3660_PID) 
+  {
     s->set_vflip(s, 1);//flip it back
     s->set_brightness(s, 1);//up the blightness just a bit
     s->set_saturation(s, -2);//lower the saturation
   }
-  s->set_framesize(s, FRAMESIZE_SVGA);
+  s->set_framesize(s, FRAMESIZE_QVGA);
    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() !=WL_CONNECTED )
-   {
+  {
      Serial.println("Failed to connect to WiFi");
      
      sleep(5);
@@ -100,8 +95,15 @@ void setup() {
 void loop() {
  if (get_data())
  {
-   Serial.println(iotclient.publish("foo/",fb->buf,fb->len));
-
+   if(iotclient.publish("foo/",fb->buf,fb->len))
+   {
+     Serial.println(String("Sucessfuly posted ") + String(fb->len) + String(" bytes"));
+   }
+   else
+   {
+     Serial.println(String("Failed to post to MQTT"));
+   }
+   fb = NULL;
  }
  sleep(10);
 }

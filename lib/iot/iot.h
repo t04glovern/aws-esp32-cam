@@ -8,7 +8,6 @@ class IOT
 
     public:
     IOT(WiFiClientSecure& wifi_client, PubSubClient& pubsub_client);
-    bool is_connected();
     //void register_callback(string topic, function);
     void print_on_publish(bool goal);
     bool publish(String topic, const uint8_t * message, unsigned int len);
