@@ -12,6 +12,8 @@ provider:
       Action:
         - s3:PutObject
       Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+  environment:
+    BUCKET_NAME: ${self:custom.bucket}
 
 custom:
   bucket: devopstar-esp32-cam
