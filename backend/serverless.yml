@@ -1,0 +1,35 @@
+service: esp32-cam-image-handler
+
+plugins:
+  - serverless-python-requirements
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+
+custom:
+  bucket: devopstar-esp32-cam
+  pythonRequirements:
+    dockerizePip: true
+
+functions:
+  image:
+    handler: handler.image
+    events:
+      - iot:
+          sql: "SELECT encode(*, 'base64') AS data FROM 'foo'"
+          sqlVersion: "2016-03-23"
+
+resources:
+  Resources:
+    Esp32CamBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucket}
+
