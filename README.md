@@ -7,26 +7,35 @@
 [Download the AWS Root CA](https://www.amazontrust.com/repository/AmazonRootCA1.pem)
 
 Create your AWS Certificates with
-```
+
+```bash
 aws iot create-keys-and-certificate \
     --set-as-active \
     --certificate-pem-outfile <certificate_filename> \
     --public-key-outfile <public_key_filename> \
     --private-key-outfile <private_key_filename>
-                            
+
+## Example
+aws iot create-keys-and-certificate \
+    --set-as-active \
+    --certificate-pem-outfile "iot_cert_demo.pem" \
+    --public-key-outfile "iot_cert_demo.key" \
+    --private-key-outfile "iot_cert_demo.private"
 ```
 
-Get your AWS IOT endpoint URl with ```aws iot describe-endpoint```
+Get your AWS IoT endpoint URL with `aws iot describe-endpoint --region us-east-1`
 
 Your certificates will need to be formatted with newline characters. For example your CA Certificate would look like.
-```
+
+```bash
 const char CA_CERT[] ="-----BEGIN CERTIFICATE-----\n"
 "MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF\n"
 "ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6\n"
 --snip---
 "-----END CERTIFICATE-----";
 ```
-Modify ```lib/conf/conf.h``` with your variables.
+
+Modify `lib/conf/conf.h` with your variables.
 
 ### Flashing Code
 
